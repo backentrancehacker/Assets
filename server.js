@@ -1,7 +1,7 @@
 const url = require('url'),
 	fs = require('fs'),
 	path = require('path'),
-	createServer = require('http').createServer;
+	createServer = require('http').createServer
 
 const types = {
 	'.html': 'text/html',
@@ -18,6 +18,7 @@ const types = {
 	'.ttf':  'application/font-ttf',
 	'.eot':  'application/vnd.ms-fontobject',
 	'.otf':  'application/font-otf',
+	'.txt':  'text/plain',
 	'.wasm': 'application/wasm'
 };
 
@@ -34,7 +35,19 @@ class App {
 	config(){
 		for(let method of arguments){
 			this.methods[method] = {};
+			let lower = method.toLowerCase()
+			this[lower] = (path, callback) => {
+				if(Array.isArray(path)){
+					for(let subPath of path){
+						this.methods[method][subPath] = callback;
+					}
+				}
+				else{
+					this.methods[method][path] = callback;
+				}
+			}
 		}
+		
 	}
 	use(func){
 		func(this.req, this.res);
@@ -65,16 +78,20 @@ class App {
 			else errorMethod(this.req, this.res);
 		}
 	}
-	get(path, callback) {
-		this.methods['GET'][path] = callback;
-	}
-	post(path, callback){
-		this.methods['POST'][path] = callback;
-	}
 	all(path, callback){
-		for(let method in this.methods){
-			this.methods[method][path] = callback;
+		if(Array.isArray(path)){
+			for(let subPath of path){
+				for(let method in this.methods){
+					this.methods[method][path] = callback;
+				}
+			}
 		}
+		else{
+			for(let method in this.methods){
+				this.methods[method][path] = callback;
+			}
+		}
+		
 	}
 	status(code){
 		this.code = code;
@@ -135,12 +152,12 @@ class App {
 				this.set(req, res)
 			}
 			catch(e){
-				res.writeHead(200, {'Content-Type': 'text/plain'});
 				console.log(e)
-				res.end('500 Internal Server Error')
+				res.writeHead(200, {'Content-Type': 'text/plain'});
+				res.end('505 Internal Server Error')
 			}
 		})
 		this.server.listen(port)
 	}
 }
-module.exports.App = App;
+module.exports = App;
