@@ -136,8 +136,8 @@ class App {
 			}
 			catch(e){
 				res.writeHead(200, {'Content-Type': 'text/plain'});
-				res.end('Uptime Robot')
-				console.log('Uptime Robot')
+				console.log(e)
+				res.end('500 Internal Server Error')
 			}
 		})
 		this.server.listen(port)

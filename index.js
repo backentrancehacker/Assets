@@ -1,7 +1,6 @@
 const {App} = require('./server.js'),
 	{getFiles} = require('./files.js'),
-	util = require('./util.js'),
-	fetch = require('node-fetch');
+	util = require('./util.js')
 
 let app = new App();
 
