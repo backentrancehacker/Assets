@@ -1,14 +1,16 @@
 const {App} = require('./server.js'),
-	{getFiles} = require('./files.js');
+	{getFiles} = require('./files.js'),
+	util = require('./util.js'),
+	fetch = require('node-fetch');
 
-let app = new App()
-
+let app = new App();
 
 const files = getFiles('./public')
 
 app.folder = './public';
 app.get('/', (req, res) => {
-	app.send(`AdCharity Assets\n${files.join('\n')}`)
+	let toSend = files.map(file => file.replace('./public', '')).join('\n');
+	app.send(toSend)
 })
 app.post('/', (req, res) => {
 	app.send(files)

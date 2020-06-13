@@ -43,8 +43,9 @@ class App {
 		this.req = req;
 		this.res = res;
 
-		let parts = url.parse(req.url),
-			method = this.methods[this.req.method][parts.pathname],
+		let parts = url.parse(req.url);
+
+		let method = this.methods[this.req.method || 'GET'][parts.pathname || '/'],
 			all = this.methods[this.req.method]['*'];
 
 		if (method) {
@@ -129,10 +130,15 @@ class App {
 		})
 	}
 	start(port){
-		
 		this.server = createServer((req, res) => {
-			
-			this.set(req, res)
+			try{
+				this.set(req, res)
+			}
+			catch(e){
+				res.writeHead(200, {'Content-Type': 'text/plain'});
+				res.end('Uptime Robot')
+				console.log('Uptime Robot')
+			}
 		})
 		this.server.listen(port)
 	}
