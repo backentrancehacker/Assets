@@ -20,8 +20,5 @@
 	"bugs": {
 		"url": "https://github.com/backentrancehacker/Assets/issues"
 	},
-	"homepage": "https://github.com/backentrancehacker/Assets#readme",
-	"dependencies": {
-		"node-fetch": "^2.6.0"
-	}
+	"homepage": "https://github.com/backentrancehacker/Assets#readme"
 }
